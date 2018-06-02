@@ -1,10 +1,24 @@
 require 'decode_morse_code_advanced'
 require 'decode_morse_code'
 
-describe('Example from description') do
+describe('#decodeBits') do
   it 'decodes HEY JUDE' do
     transmission = '1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011'
     expect(decodeMorse(decodeBits(transmission))).to eq('HEY JUDE')
+  end
+
+  it 'decodes the alphabet' do
+    transmission = '111000101010100010000000'\
+                   '11101110101110001010111000101000111010111010001110101110000000'\
+                   '111010101000101110100011101110111000101110111000111010000000'\
+                   '10101110100011101110111000111010101110000000'\
+                   '10111011101110001010111000111011100010111011101000101010000000'\
+                   '11101110111000101010111000100010111010000000'\
+                   '111000101010100010000000'\
+                   '101110101000101110001110111010100011101011101110000000'\
+                   '111010100011101110111000111011101'
+    decoded_message = 'THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG'
+    expect(decodeMorse(decodeBits(transmission))).to eq(decoded_message)
   end
 end
 
@@ -40,44 +54,44 @@ describe '#clean_ends' do
   end
 end
 
-describe '#determine_units' do
+describe '#determine_unit_mapping' do
   it 'determines the length of a dot when there is just a dot' do
-    dot, dash, code_space, char_space, word_space = determine_units('11')
-    expect(dot).to eq('11')
+    mapping = determine_unit_mapping('11')
+    expect(mapping['11']).to eq('.')
   end
 
   it 'determines the length of a dash from a dot' do
-    dot, dash, code_space, char_space, word_space = determine_units('11')
-    expect(dash).to eq('111111')
+    mapping = determine_unit_mapping('11')
+    expect(mapping['111111']).to eq('-')
   end
 
   it 'determines the length of a code_space from a dot if there is no space' do
-    dot, dash, code_space, char_space, word_space = determine_units('11')
-    expect(code_space).to eq('00')
+    mapping = determine_unit_mapping('11')
+    expect(mapping['00']).to eq('')
   end
 
   it 'assumes a single transmission is a dot' do
-    dot, dash, code_space, char_space, word_space = determine_units('1111111111')
-    expect(dot).to eq('1111111111')
+    mapping = determine_unit_mapping('1111111111')
+    expect(mapping['1111111111']).to eq('.')
   end
 
   it 'determines the length of a code_space by the smallest pause' do
-    dot, dash, code_space, char_space, word_space = determine_units('11111100111111')
-    expect(code_space).to eq('00')
+    mapping = determine_unit_mapping('11111100111111')
+    expect(mapping['00']).to eq('')
   end
 
   it 'realizes the length of a pause is the same as the code_space' do
-    dot, dash, code_space, char_space, word_space = determine_units('11111100111111')
-    expect(dot).to eq('11')
+    mapping = determine_unit_mapping('11111100111111')
+    expect(mapping['11']).to eq('.')
   end
 
   it 'determines the char_space based on the code_space' do
-    dot, dash, code_space, char_space, word_space = determine_units('11111100111111')
-    expect(char_space).to eq('000000')
+    mapping = determine_unit_mapping('11111100111111')
+    expect(mapping['000000']).to eq(' ')
   end
 
   it 'determines the word_space based on the code_space' do
-    dot, dash, code_space, char_space, word_space = determine_units('11111100111111')
-    expect(word_space).to eq('00000000000000')
+    mapping = determine_unit_mapping('11111100111111')
+    expect(mapping['00000000000000']).to eq('   ')
   end
 end

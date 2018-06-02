@@ -1,14 +1,7 @@
 def decodeBits(bits)
   cleaned_bits = clean_ends(bits)
-  dot, dash, code_space, char_space, word_space = determine_units(cleaned_bits)
-
-  cleaned_bits = replace_bits_with_morse(cleaned_bits, word_space, '   ')
-  cleaned_bits = replace_bits_with_morse(cleaned_bits, char_space, ' ')
-  cleaned_bits = replace_bits_with_morse(cleaned_bits, dash, '-')
-  cleaned_bits = replace_bits_with_morse(cleaned_bits, dot, '.')
-  code_phrase = replace_bits_with_morse(cleaned_bits, code_space, '')
-
-  code_phrase
+  unit_mapping = determine_unit_mapping(cleaned_bits)
+  replace_bits_with_morse_code(cleaned_bits, unit_mapping)
 end
 
 def clean_ends(bits)
@@ -27,15 +20,15 @@ def trim_front_space(bits)
   bits
 end
 
-def determine_units(cleaned_bits)
+def determine_unit_mapping(cleaned_bits)
   smallest_unit = determine_smallest_unit(cleaned_bits)
-
-  dot = '1' * smallest_unit
-  dash = dot * 3
-  code_space = '0' * smallest_unit
-  char_space = code_space * 3
-  word_space = code_space * 7
-  return dot, dash, code_space, char_space, word_space
+  {
+    ('1' * (smallest_unit * 3)) => '-',
+    ('1' * smallest_unit) => '.',
+    ('0' * (smallest_unit * 7)) => '   ',
+    ('0' * (smallest_unit * 3)) => ' ',
+    ('0' * smallest_unit) => ''
+  }
 end
 
 def determine_smallest_unit(cleaned_bits)
@@ -44,17 +37,17 @@ def determine_smallest_unit(cleaned_bits)
   pauses = cleaned_bits.split('1').delete_if { |bit| bit == '' }
   smallest_pause = pauses.any? ? pauses.min.length : nil
 
-  if smallest_unit_longer_than_smallest_pause?(smallest_unit, smallest_pause)
-    # given we're in this block, the smallest transmission is a dash
-    smallest_unit = smallest_pause
-  end
+  # is the smallest transmission unit actually a dash?
+  smallest_unit = smallest_pause if unit_longer_than_pause?(smallest_unit, smallest_pause)
+
   smallest_unit
 end
 
-def smallest_unit_longer_than_smallest_pause?(smallest_unit, smallest_pause)
+def unit_longer_than_pause?(smallest_unit, smallest_pause)
   smallest_pause && smallest_unit > smallest_pause
 end
 
-def replace_bits_with_morse(bit_string, unit, morse_code)
-  bit_string.gsub(unit, morse_code)
+def replace_bits_with_morse_code(transmission, unit_mapping)
+  unit_mapping.each { |unit, morse_equivalent| transmission.gsub!(unit, morse_equivalent) }
+  transmission
 end
