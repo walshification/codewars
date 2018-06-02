@@ -5,13 +5,13 @@ def decodeBits(bits)
 end
 
 def clean_ends(bits)
-  bits = trim_front_space(bits)
+  bits = trim_space(bits)
   reversed = bits.reverse
-  bits = trim_front_space(reversed)
+  bits = trim_space(reversed)
   bits.reverse
 end
 
-def trim_front_space(bits)
+def trim_space(bits)
   idx = 0
   until bits[idx] == '1'
     idx += 1
@@ -45,6 +45,7 @@ end
 def slice_bit(bits, idx)
   start_index = idx
   slice_length = 1
+  # if we start with a '0', go until we hit a '1', and vice-versa
   while bits[start_index] == bits[start_index + slice_length]
     slice_length += 1
   end
