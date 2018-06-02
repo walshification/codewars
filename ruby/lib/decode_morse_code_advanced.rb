@@ -33,34 +33,22 @@ end
 
 def determine_smallest_unit(cleaned_bits)
   idx = 0
-  dots_and_dashes = []
-  pauses = []
+  smallest_unit = 9000 # arbitrarily big value
   until idx == cleaned_bits.length
     bit = slice_bit(cleaned_bits, idx)
-    dots_and_dashes << bit if bit.include?('1')
-    pauses << bit if bit.include?('0')
+    smallest_unit = bit.length if smallest_unit > bit.length
     idx += bit.length
   end
-  smallest_unit = dots_and_dashes.min.length
-  smallest_pause = pauses.any? ? pauses.min.length : nil
-
-  # is the smallest transmission unit actually a dash?
-  smallest_unit = smallest_pause if unit_longer_than_pause?(smallest_unit, smallest_pause)
-
   smallest_unit
 end
 
 def slice_bit(bits, idx)
-  starting_index = idx
-  ending_index = idx
-  while bits[starting_index] == bits[ending_index]
-    ending_index += 1
+  start_index = idx
+  slice_length = 1
+  while bits[start_index] == bits[start_index + slice_length]
+    slice_length += 1
   end
-  bits.slice(starting_index, (ending_index - starting_index))
-end
-
-def unit_longer_than_pause?(smallest_unit, smallest_pause)
-  smallest_pause && smallest_unit > smallest_pause
+  bits.slice(start_index, slice_length)
 end
 
 def replace_bits_with_morse_code(transmission, unit_mapping)
