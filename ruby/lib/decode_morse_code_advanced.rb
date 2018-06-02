@@ -32,15 +32,31 @@ def determine_unit_mapping(cleaned_bits)
 end
 
 def determine_smallest_unit(cleaned_bits)
-  dots_and_dashes = cleaned_bits.split('0').delete_if { |bit| bit == '' }
+  idx = 0
+  dots_and_dashes = []
+  pauses = []
+  until idx == cleaned_bits.length
+    bit = slice_bit(cleaned_bits, idx)
+    dots_and_dashes << bit if bit.include?('1')
+    pauses << bit if bit.include?('0')
+    idx += bit.length
+  end
   smallest_unit = dots_and_dashes.min.length
-  pauses = cleaned_bits.split('1').delete_if { |bit| bit == '' }
   smallest_pause = pauses.any? ? pauses.min.length : nil
 
   # is the smallest transmission unit actually a dash?
   smallest_unit = smallest_pause if unit_longer_than_pause?(smallest_unit, smallest_pause)
 
   smallest_unit
+end
+
+def slice_bit(bits, idx)
+  starting_index = idx
+  ending_index = idx
+  while bits[starting_index] == bits[ending_index]
+    ending_index += 1
+  end
+  bits.slice(starting_index, (ending_index - starting_index))
 end
 
 def unit_longer_than_pause?(smallest_unit, smallest_pause)
