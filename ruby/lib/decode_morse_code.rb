@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 MORSE_CODE = {
   '.-' => 'A',
   '-...' => 'B',
@@ -35,10 +37,10 @@ MORSE_CODE = {
   '---..' => '8',
   '----.' => '9',
   '-----' => '0'
-}
+}.freeze
 
-def decodeMorse(morseCode)
-  cleaned_code = morseCode.strip
+def decode_morse(morse_code)
+  cleaned_code = morse_code.strip
   words = cleaned_code.split('   ')
   words.map { |word| decode_word(word) }.join(' ')
 end

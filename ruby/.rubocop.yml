@@ -1,0 +1,11 @@
+AllCops:
+  Exclude:
+    - 'tmp/**/*'
+    - 'spec/**/*'
+    - 'coverage/**/*'
+    - Gemfile
+    - Gemfile.lock
+    - Guardfile
+
+Metrics/LineLength:
+  Max: 93

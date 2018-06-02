@@ -1,12 +1,12 @@
 require 'decode_morse_code'
 
-describe '#decodeMorse' do
+describe '#decode_morse' do
   it 'decodes a letter' do
-    expect(decodeMorse('...')).to eq('S')
+    expect(decode_morse('...')).to eq('S')
   end
 
   it 'decodes a phrase' do
-    expect(decodeMorse('... --- ...')).to eq('SOS')
+    expect(decode_morse('... --- ...')).to eq('SOS')
   end
 
   it 'decodes sentences' do
@@ -14,6 +14,6 @@ describe '#decodeMorse' do
                    '.--- ..- -- .--. ...   --- ...- . .-.   - .... .   .-.. .- --.. -.--'\
                    '   -.. --- --.'
     decoded_message = 'THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG'
-    expect(decodeMorse(transmission)).to eq(decoded_message)
+    expect(decode_morse(transmission)).to eq(decoded_message)
   end
 end

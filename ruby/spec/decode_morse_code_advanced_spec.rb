@@ -1,7 +1,7 @@
 require 'decode_morse_code_advanced'
 require 'decode_morse_code'
 
-describe('#decodeBits') do
+describe('#decode_bits') do
   it 'decodes the alphabet' do
     transmission = '111000101010100010000000'\
                    '11101110101110001010111000101000111010111010001110101110000000'\
@@ -13,7 +13,7 @@ describe('#decodeBits') do
                    '101110101000101110001110111010100011101011101110000000'\
                    '111010100011101110111000111011101'
     decoded_message = 'THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG'
-    expect(decodeMorse(decodeBits(transmission))).to eq(decoded_message)
+    expect(decode_morse(decode_bits(transmission))).to eq(decoded_message)
   end
 end
 

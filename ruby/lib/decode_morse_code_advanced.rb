@@ -1,4 +1,6 @@
-def decodeBits(bits)
+# frozen_string_literal: true
+
+def decode_bits(bits)
   cleaned_bits = clean_ends(bits)
   unit_mapping = determine_unit_mapping(cleaned_bits)
   replace_bits_with_morse_code(cleaned_bits, unit_mapping)
@@ -13,9 +15,7 @@ end
 
 def trim_space(bits)
   idx = 0
-  until bits[idx] == '1'
-    idx += 1
-  end
+  idx += 1 until bits[idx] == '1'
   bits.slice!(0, idx)
   bits
 end
@@ -46,9 +46,7 @@ def slice_bit(bits, idx)
   start_index = idx
   slice_length = 1
   # if we start with a '0', go until we hit a '1', and vice-versa
-  while bits[start_index] == bits[start_index + slice_length]
-    slice_length += 1
-  end
+  slice_length += 1 while bits[start_index] == bits[start_index + slice_length]
   bits.slice(start_index, slice_length)
 end
 
